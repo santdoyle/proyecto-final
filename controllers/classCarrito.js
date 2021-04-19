@@ -7,10 +7,17 @@ class Carrito{
 
     listarCarrito(){
         if(this.arr.length === 0){
-            return "No hay productos en el carro"
+            const error = {
+                msj: "No hay productos en el carro"
+            }
+            return error
+        
+        }else{
+
+            return this.arr
         }
 
-        return this.arr
+        
     }
 
     listarCarritoPorID(id){
@@ -27,13 +34,16 @@ class Carrito{
 
     agregarAlCarrito(item, id_carrito){
 
+        let producto = []
+        producto.push(item)
+
         let listadoEnCarrito = {
             id: id_carrito,
             timestamp: Date.now(),
-            producto: []
+            producto: producto
         }
 
-        listadoEnCarrito.producto.push(item)
+        //listadoEnCarrito.producto.push(item)
 
         return listadoEnCarrito
     }
