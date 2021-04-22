@@ -37,6 +37,13 @@
     padding-bottom: 1rem!important;
 }
 
+.imgProduct{
+    height: 300px;
+    max-height: 300px;
+    width: 100%;
+    background-size: cover;
+}
+
 /*Carrito*/
 .quantity {
     float: left;
@@ -107,4 +114,9 @@
 .preCarrito{
     display: block;
     padding: 20px 0px;
+}
+
+.cartproduct{
+    padding: 10px;
+    border-bottom: solid 1px #eee;
 }

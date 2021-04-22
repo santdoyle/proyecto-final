@@ -1,3 +1,5 @@
+const modelCarrito = require('../models/modelCarrito.js')
+
 class Carrito{
     arr = ""
     
@@ -6,18 +8,10 @@ class Carrito{
     }
 
     listarCarrito(){
-        if(this.arr.length === 0){
-            const error = {
-                msj: "No hay productos en el carro"
-            }
-            return error
-        
-        }else{
+        const carrito = new modelCarrito()
+        const getAll = carrito.listarCarrito()
 
-            return this.arr
-        }
-
-        
+        return getAll
     }
 
     listarCarritoPorID(id){
@@ -32,30 +26,20 @@ class Carrito{
         return item
     }
 
-    agregarAlCarrito(item, id_carrito){
+    agregarAlCarrito(producto){
+        
+        const carrito = new modelCarrito()
+        const nuevoCarrito = carrito.crearCarrito(producto)
 
-        let producto = []
-        producto.push(item)
-
-        let listadoEnCarrito = {
-            id: id_carrito,
-            timestamp: Date.now(),
-            producto: producto
-        }
-
-        //listadoEnCarrito.producto.push(item)
-
-        return listadoEnCarrito
+        return nuevoCarrito
     }
 
 
-    borrarDelCarrito(id){
-        const idInt = parseInt(id)
-        const index = this.arr.findIndex(el => el.id === idInt)
+    borrarCarro(id){
+        const carrito = new modelCarrito()
+        const borrar = carrito.borrarCarrito(id)
         
-        this.arr.splice(index, 1)
-        
-        return this.arr
+        return borrar
     }
 }
 

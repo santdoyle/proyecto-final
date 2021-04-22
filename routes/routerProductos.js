@@ -17,15 +17,20 @@ const productos = new Productos(listadoProductos)
 routerProductos.get('/listar', (request, response, next) => {
     try {
         if(request.query.id){
-        
+            
             const item = productos.listarProductosPorID(request.query.id)
-            response.status(200)
-            response.json(item)
-        
+            
+            item.then(resp => {
+                //response.status(200)
+                
+                response.send(resp)
+            })
+                    
         }else{
             
             const getAll = productos.listarTodos()
-            response.send(getAll)
+            getAll.then(resp => response.send(resp))
+
         }
 
     } catch (error) {
@@ -44,10 +49,10 @@ routerProductos.post('/agregar', (request, response, next) => {
     try {
         if(administrador === true){
             const addProducto = productos.agregarProducto(request.body, id++)
-            listadoProductos.push(addProducto)
+            //listadoProductos.push(addProducto)
             
             //response.status(200)
-            response.redirect('/public/')
+            response.redirect('/tienda/')
             //response.json(`Producto agregado. Cantidad: ${listadoProductos.length}`)
             
         }else{
@@ -64,7 +69,7 @@ routerProductos.post('/agregar', (request, response, next) => {
         console.log(error)
         error = {msj: `Ha ocurrido un error ${error}`}
 
-        response.json(error)
+        response.json(error.msj)
     }
     
 })
@@ -104,10 +109,13 @@ routerProductos.delete('/borrar/:id', (request, response, next) => {
     try {
         if(administrador === true){
             let eliminado = productos.borrarProducto(request.params.id)
-            listadoProductos = eliminado
             
-            response.status(200)
-            response.json(eliminado)
+            eliminado.then(resp => {
+                response.status(200)
+                response.json(resp)
+            })
+            
+            
         }else{
             const error = {
                 error: "-1",

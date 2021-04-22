@@ -1,3 +1,5 @@
+const modelProductos = require('../models/modelProductos.js')
+
 class Productos{
     arr = ""
     constructor(arr){
@@ -5,25 +7,31 @@ class Productos{
     }
 
     listarTodos(){
-        if(this.arr.length === 0){
-            const msg = {"msg": "No hay productos añadidos"}
+        /*if(this.arr.length === 0){
+            const error = {msg: "No hay productos añadidos"}
 
-            return msg
-        }
-        return this.arr
+            return error.msg
+        }*/
+
+        const db = new modelProductos()
+        const lista = db.listarTodosLosProductos()     
+        
+        return lista
     }
     
     listarProductosPorID(id){
-        const listado = this.arr
-        const idInt = parseInt(id)
+        //const listado = this.arr
+        //const idInt = parseInt(id)
 
-        if(id > this.arr.length){
+        /*if(id > this.arr.length){
             throw new Error('Producto no encontrado')
-        }
+        }*/
 
-        const item = listado.find(elem => elem.id === idInt)
+        const db = new modelProductos()
+        const p = db.listarProductoPorID(id)
         
-        return item
+        return p
+        
     }
 
     agregarProducto(data, id){
@@ -39,47 +47,39 @@ class Productos{
             stock: data.stock
         }
 
-        return producto
+        const insert = new modelProductos()
+        const insertado = insert.insertarProducto(producto)
+        
+        return insertado
     }
 
-    actualizarProducto(id, data){
-        if(id > this.arr.length){
-            
-            throw new Error('El producto indicado no existe')
-        
-        }else{
-            const idInt = parseInt(id)
-            
-            let index = this.arr.findIndex(elem => elem.id === idInt)
-
-            this.arr[index] = {
-                id: idInt,
-                timestamp: Date.now(),
-                nombre: data.nombre,
-                descripcion: data.descripcion,
-                codigo: data.codigo,
-                imgUrl: data.imgUrl,
-                precio: data.precio,
-                stock: data.stock
-            }
     
-            return this.arr
+    actualizarProducto(id, data){
+        const idInt = parseInt(id)
+            
+        const p = {
+            id: idInt,
+            timestamp: Date.now(),
+            nombre: data.nombre,
+            descripcion: data.descripcion,
+            codigo: data.codigo,
+            imgUrl: data.imgUrl,
+            precio: data.precio,
+            stock: data.stock
         }
+
+        const db = new modelProductos()
+        const actualizar = db.actualizarProducto(p)
+    
+        return actualizar
+        
     }
 
     borrarProducto(id){
-        if(id > this.arr.length){
-            
-            return {"msg": "El producto indicado no existe"}
+        const db = new modelProductos()
+        const borrar = db.borrarProducto(id)
         
-        }else{
-            const idInt = parseInt(id)
-            const index = this.arr.findIndex(el => el.id === idInt)
-            
-            this.arr.splice(index, 1)
-            
-            return {"msg": "Producto eliminado correctamente"}
-        }
+        return borrar
     }
 
 }

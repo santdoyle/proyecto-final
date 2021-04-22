@@ -1,9 +1,11 @@
 /*
     * Listar todos los productos
 */
+
 const getProductos = async () => {
     const data = await fetch('/productos/listar')
     const response = data.json();
+    
     return response
 }
 
@@ -22,7 +24,7 @@ getProductos().then(resp => {
             let div = document.createElement('div')
             
             div.innerHTML = `<div class="card shadow-sm">
-                                <img src="${element.imgUrl}">
+                                <img class="imgProduct" src="${element.imgUrl}">
                                 <div class="card-body">
                                 <h2>${element.nombre}</h2>
                                 <small id="idProducto">${element.precio}</small>
@@ -46,22 +48,22 @@ getProductos().then(resp => {
             
             botonVer.addEventListener('click', () => {
 
-                //Fetch para trear infrmación del prodcuto segun id
-                const getProductoByID = async () => {
-                    const data = await fetch('/productos/listar?id=' + element.id)
-                    const respuesta = await data.json()
+                fetch('/productos/listar?id=' + element.id, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(resp => resp.json())
+                .then(resp => {
 
-                    return respuesta
-                }
-
-                //Cambio el template para mostrar detalles del producto
-                getProductoByID().then(resp => {
                     const ficha = `<div class="card">
                                     <div class="row">
                                         <aside class="col-sm-5 border-right">
                                             <article class="gallery-wrap"> 
                                                 <div class="img-big-wrap">
-                                                <div> <a href="#"><img src="${resp.imgUrl}"></a></div>
+                                                <div> <a href="#"><img src="${resp[0].imgUrl}"></a></div>
                                                 </div> <!-- slider-product.// -->
                                             </article> <!-- gallery-wrap .end// -->
                                         </aside>
@@ -70,20 +72,20 @@ getProductos().then(resp => {
                                         
                                             <p class="price-detail-wrap"> 
                                                 <span class="price h3 text-warning"> 
-                                                    <span class="currency">ARS $</span><span class="num">${resp.precio}</span>
+                                                    <span class="currency">ARS $</span><span class="num">${resp[0].precio}</span>
                                                 </span> 
                                             </p> <!-- price-detail-wrap .// -->
                                             <dl class="item-property">
                                                 <dt>Description</dt>
-                                                <dd><p>${resp.descripcion} </p></dd>
+                                                <dd><p>${resp[0].descripcion} </p></dd>
                                             </dl>
                                             <dl class="param param-feature">
                                                 <dt>Codigo</dt>
-                                                <dd>${resp.codigo}</dd>
+                                                <dd>${resp[0].codigo}</dd>
                                             </dl>  <!-- item-property-hor .// -->
                                             <dl class="param param-feature">
                                                 <dt>Stock</dt>
-                                                <dd>${resp.stock}</dd>
+                                                <dd>${resp[0].stock}</dd>
                                             </dl>  <!-- item-property-hor .// -->                            
                                             <hr>
                                             <button class="btn btn-lg btn-outline-primary" id="comprar"> 
@@ -100,7 +102,7 @@ getProductos().then(resp => {
                                 
                     //Reemplazo el grid de productos por la ficha del producto seleccionado            
                     const titulo = document.getElementById('titulo')
-                    titulo.innerHTML = `${resp.nombre}`
+                    titulo.innerHTML = `${resp[0].nombre}`
              
                     const desc = document.getElementById('desc')
                     desc.remove()
@@ -116,14 +118,21 @@ getProductos().then(resp => {
                     cargando.style.display = "none"
                    
                     comprar.addEventListener('click', () => {
-                        console.log(resp.id)
+                        
                         comprar.style.display = "none"
                         cargando.style.display = "block"
 
                         const data = {
-                            id: resp.id
+                            id: resp[0].id,
+                            timestamp: resp[0].timestamp,
+                            nombre: resp[0].nombre,
+                            descripcion: resp[0].descripcion,
+                            codigo: resp[0].codigo,
+                            imgUrl: resp[0].imgUrl,
+                            precio: resp[0].precio,
+                            stock: resp[0].stock
                         }
-                        
+
                         fetch('/carrito/agregar', {
                             method: 'POST',
                             headers: {
@@ -132,7 +141,7 @@ getProductos().then(resp => {
                             },
                             body: JSON.stringify(data)
                         })
-                        .then(resp => resp.json)
+                        .then(resp => resp.json())
                         .then(resp => console.log(resp))
 
                         setTimeout(() => {
@@ -156,31 +165,31 @@ getProductos().then(resp => {
                                        
                                         <div class="form-group">
                                             <label>ID</label>
-                                            <input class="form-control" type="text" id="id" name="id" value="${resp.id}">
+                                            <input class="form-control" type="text" id="id" name="id" value="${resp[0].id}">
                                         </div>
                                         <div class="form-group">
                                             <label>Nombre</label>
-                                            <input class="form-control" type="text" id="nombre" name="nombre" placeholder="${resp.nombre}">
+                                            <input class="form-control" type="text" id="nombre" name="nombre" value="${resp[0].nombre}">
                                         </div>
                                         <div class="form-group">
                                             <label>Descripción del producto</label>
-                                            <textarea class="form-control" id="descripcion" name="descripcion" placeholder="${resp.descripcion}"></textarea>
+                                            <input class="form-control" id="descripcion" name="descripcion" value="${resp[0].descripcion}" />
                                         </div>
                                         <div class="form-group">
                                             <label>Codigo</label>
-                                            <input class="form-control" type="text" id="codigo" name="codigo" placeholder="${resp.codigo}">
+                                            <input class="form-control" type="text" id="codigo" name="codigo" value="${resp[0].codigo}">
                                         </div>
                                         <div class="form-group">
                                             <label>Url de imagen</label>
-                                            <input class="form-control" type="text" id="imgUrl" name="imgUrl" placeholder="${resp.imgUrl}">
+                                            <input class="form-control" type="text" id="imgUrl" name="imgUrl" value="${resp[0].imgUrl}">
                                         </div>
                                         <div class="form-group">
                                             <label>Precio</label>
-                                            <input class="form-control" type="text" id="precio" name="precio" placeholder="${resp.precio}">
+                                            <input class="form-control" type="text" id="precio" name="precio" value="${resp[0].precio}">
                                         </div>
                                         <div class="form-group">
                                             <label>Stock</label>
-                                            <input class="form-control" type="text" id="stock" name="stock" placeholder="${resp.stock}">
+                                            <input class="form-control" type="text" id="stock" name="stock" value="${resp[0].stock}">
                                         </div>
                                         <button type="submit" id="actualizar" class="btn btn-primary" data-dismiss="modal">Agregar</button>
                                     </div>
@@ -238,7 +247,7 @@ getProductos().then(resp => {
                         })
                         .then(resp => resp.json())
                         .then(resp => {
-                            container.innerHTML = resp.msg
+                            container.innerHTML = resp.msj
                         })
 
                         windows.location.assign('/tienda')

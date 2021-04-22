@@ -10,6 +10,7 @@ let carritoCompras = []
     * Endpoint Carrito
 */
 const carrito = new Carrito(carritoCompras)
+
 routerCarrito.get('/listar', (request, response, next) => {
     try {
         const itemID = request.query.id
@@ -28,9 +29,12 @@ routerCarrito.get('/listar', (request, response, next) => {
             
         }else{
             const getAll = carrito.listarCarrito()
-            
-            response.status(200)
-            response.json(getAll)
+
+            getAll.then(resp => {
+                response.status(200)
+                response.json(resp)
+            })
+
         }
         
 
@@ -41,24 +45,17 @@ routerCarrito.get('/listar', (request, response, next) => {
 })
 
 //Cargar productos al carrito
-let idCarrito = 0
 routerCarrito.post('/agregar', (request, response, next) => {
     try {
-        if(listadoProductos.length === 0){
-            
-            response.json({msj: "No hay productos a la venta."})
-       
-        }else{
 
-            const item = listadoProductos.find(elem => elem.id === request.body.id)
-            const addItem = carrito.agregarAlCarrito(item, idCarrito++)
+        const addCart = carrito.agregarAlCarrito(request.body)
 
-            carritoCompras.push(addItem)
-            
+        addCart.then(resp => {
             response.status(200)
-            response.json(carritoCompras)
+            response.json(resp)
+        })
         
-        }
+        
     } catch (error) {
         console.log(error)
         response.json({msj: `Ha ocurrido un error: ${error}`})
@@ -69,18 +66,11 @@ routerCarrito.post('/agregar', (request, response, next) => {
 //Eliminar producto del carrito
 routerCarrito.delete('/borrar/:id', (request, response, next) => {
     try {
-        if(request.params.id > carritoCompras.length){
-            
-            response.json({msj: "El producto no está en el carrito."})
+        const borrar = carrito.borrarCarro(request.params.id)
+        borrar.then(resp => {
+            response.json(resp) 
+        })
         
-        }else{
-            
-            const carritoActualizado = carrito.borrarDelCarrito(request.params.id)
-            carritoCompras = carritoActualizado
-
-            response.json(carritoCompras)
-        }
-    
     } catch (error) {
         console.log(error)
         response.json({msj: `Ha ocurrido un error: ${error}`})
