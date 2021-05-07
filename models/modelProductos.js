@@ -1,92 +1,80 @@
-const {options} = require('../options/mariaDB.js')
-const knex = require('knex')(options)
+const models = require('./schemas/schemaProductos.js')
+require('./connection.js')
 
 class modelProductos{
 
-    //Guardar producto en DB
-    insertarProducto(producto){
-        knex('productos').insert({
-            id: producto.id,
-            timestamp: producto.timestamp,
-            nombre: producto.nombre,
-            descripcion: producto.descripcion,
-            codigo: producto.codigo,
-            imgUrl: producto.imgUrl,
-            precio: producto.precio,
-            stock: producto.stock
-        })
-        .then((resp) => {
-            if(resp == 1){
-                return {msj: 'Producto guardado correctamente'}
+    insertarProducto(prod){
+        
+        const data = new models.Productos(prod)
+        const save = data.save((err, documment) => {
+            if(err){
+                console.log(err)
             }else{
-                return {msj: 'Ocurrio un error. Volvé a intentarlo'}
+                console.log('Insertado correctamente')
+                console.log(documment)
             }
         })
-        .catch(e => {console.log(e); throw e})
-        
-        
-    }
-
-    //Seleccionar todos los Productos en DB
-    listarTodosLosProductos(){
-        let data = []
-        return knex.select().from('productos')
-            .then((resp) => {
-                for (const item of resp) {
-                    data.push(item)
-                }
-
-                return data
-            })
-            .catch(e => console.log(e))
-    }
-
-    //Seleccionar un solo producto en DB
-    listarProductoPorID(id){
-        
-        return knex.from('productos').select().where('id', id)
-            .then((resp) => {
-                return resp
-            })
+        .then(resp => console.log(resp))
         .catch(e => console.log(e))
+
+        return save
     }
 
-    //Borrar un producto
-    borrarProducto(id){
-        return knex.from('productos').where('id', id).del()
+
+    listarTodosLosProductos(){
+        const getAll = models.Productos
+            .find()
             .then(resp => {
-                if(resp == 1){
-                    return {msj: 'El producto fue eliminado correctamente'}
+                if(resp.length > 0){
+                    return resp
                 }else{
-                    return {msj: 'El producto no se encuentra'}
+                    return {msj: 'No hay productos añadidos'}
                 }
             })
-            .catch(e => e)
+        
+            return getAll
     }
 
-    //Actualizar un producto en DB
-    actualizarProducto(producto){
 
-        knex.from('productos').where('id', producto.id).update({
-            id: producto.id,
-            timestamp: producto.timestamp,
-            nombre: producto.nombre,
-            descripcion: producto.descripcion,
-            codigo: producto.codigo,
-            imgUrl: producto.imgUrl,
-            precio: producto.precio,
-            stock: producto.stock
-        })
-        .then(resp => {
-            if(resp == 1){
-                return {msj: 'Producto actualizado correctamente'}
-            }else{
-                return {msj: 'Error al actualizar el producto'}
-            }
-        })
-        .catch(e => e)
+    listarProductoPorID(id){
+        const getById = models.Productos.find({idProducto: id})
 
+        return getById
+    }
+
+
+    actualizarProducto(p){
+        console.log(typeof p.id)
+        
+        const update = models.Productos
+            .updateOne(
+                {"idProducto": p.id},
+                {$set: 
+                    {
+                        "nombre" : p.nombre,
+                        "descripcion": p.descripcion,
+                        "codigo": p.codigo,
+                        "imgUrl": p.imgUrl,
+                        "precio": p.precio,
+                        "stock": p.stock 
+                    }
+                }
+            )
+            .then(resp => console.log(resp))
+            .catch(e => console.log(e))
+        
+            return update
+
+    }
+
+    borrarProducto(id){
+        const borrar = models.Productos
+            .deleteOne({idProducto: id})
+            .then(resp => console.log(resp))
+            .catch(e => console.log(e))
+
+        return borrar   
     }
 }
-
+    
 module.exports = modelProductos

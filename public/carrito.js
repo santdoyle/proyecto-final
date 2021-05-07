@@ -9,8 +9,9 @@ fetch('/carrito/listar')
     
     }else{
         resp.forEach(element => {
+            console.log(element)
             const productos = JSON.parse(element.productos)
-            
+
             let div = document.createElement('div')
                 const resumen = `<!-- PRODUCT -->
                                     <div class="col-12 col-sm-12 col-md-2 text-center">
@@ -35,7 +36,7 @@ fetch('/carrito/listar')
                                             </div>
                                         </div>
                                         <div class="col-2 col-sm-2 col-md-2 text-right">
-                                            <button type="button" class="btn btn-outline-danger btn-xs" id="eliminar-${productos.id}">
+                                            <button type="button" class="btn btn-outline-danger btn-xs" id="eliminar-${element._id}">
                                                 <i class="fa fa-trash" aria-hidden="true"></i>
                                             </button>
                                         </div>
@@ -48,11 +49,11 @@ fetch('/carrito/listar')
                 /*
                     * Borrar producto del carrito
                 */
-                const eliminar = document.getElementById(`eliminar-${productos.id}`)
+                const eliminar = document.getElementById(`eliminar-${element._id}`)
 
                 eliminar.addEventListener('click', () => {
                     
-                    fetch('/carrito/borrar/' + element.id, {
+                    fetch('/carrito/borrar/' + element._id, {
                         method: 'DELETE',
                         headers: {
                             'Accept': 'application/json',

@@ -47,7 +47,6 @@ routerCarrito.get('/listar', (request, response, next) => {
 //Cargar productos al carrito
 routerCarrito.post('/agregar', (request, response, next) => {
     try {
-
         const addCart = carrito.agregarAlCarrito(request.body)
 
         addCart.then(resp => {

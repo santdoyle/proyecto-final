@@ -1,49 +1,48 @@
-const {options} = require('../options/mariaDB.js')
-const knex = require('knex')(options)
+const models = require('./schemas/schemaCarrito.js')
 
 class modelCarrito{
 
-    listarCarrito(){
-        return knex('carrito').select()
-            .then(resp => {
-                if(resp.length > 0 ){
-                    return resp
-                    
-                }else{
-                    return {msj: 'No hay productos en el carrito'}
-                }
-                
-            })
-            .catch(e => e)
+    crearCarrito(producto){
+        const carrito = {
+            timestamp: Date.now(),
+            productos: JSON.stringify(producto)
+        }
+
+        const crear = new models.Carritos(carrito)
+        const guardar = crear.save()
+        .then(resp => console.log(resp))
+        .catch(e => console.log(e))
+
+        return guardar
     }
 
-    crearCarrito(producto){
-        return knex('carrito').insert({
-                timestamp: Date.now(),
-                productos: JSON.stringify(producto)
-            })
-            .then(resp => {
-                console.log(resp)
-                if(resp == 1){
-                    return {msj: 'El producto se agrego al carrito'}
-                }else{
-                    return {msj: 'Error al guardar el producto en el carrito'}
-                }
-            })
-            .catch(e => e)
+    listarCarrito(){
+        const listar = models.Carritos.find()
+        .then(resp => {
+            if(resp.length > 0){
+                return resp
+            }else{
+                return {msj: 'No hay productos en el carrito'}
+            }
+        })
+        .catch(e => console.log(e))
+
+        return listar
     }
-    
+
 
     borrarCarrito(id){
-        return knex('carrito').where('id', id).del()
+        const borrar = models.Carritos.deleteOne({_id: id})
             .then(resp => {
-                if(resp == 1){
-                    return {msj: 'Carrito eliminado correctamente'}
+                if(resp.n > 0){
+                    return {msj: 'Producto eliminado del carrito'}
                 }else{
-                    return {msj: 'El carrito no puede ser eliminado'}
+                    return {msj: 'Error al eliminar el producto'}
                 }
             })
-            .catch(e => e)
+            .catch(e => console.log(e))
+
+        return borrar
     }
 }
 

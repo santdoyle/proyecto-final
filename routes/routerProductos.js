@@ -109,6 +109,7 @@ routerProductos.delete('/borrar/:id', (request, response, next) => {
     try {
         if(administrador === true){
             let eliminado = productos.borrarProducto(request.params.id)
+            console.log(eliminado)
             
             eliminado.then(resp => {
                 response.status(200)

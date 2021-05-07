@@ -20,12 +20,6 @@ class Productos{
     }
     
     listarProductosPorID(id){
-        //const listado = this.arr
-        //const idInt = parseInt(id)
-
-        /*if(id > this.arr.length){
-            throw new Error('Producto no encontrado')
-        }*/
 
         const db = new modelProductos()
         const p = db.listarProductoPorID(id)
@@ -37,7 +31,7 @@ class Productos{
     agregarProducto(data, id){
 
         let producto = {
-            id: id++,
+            idProducto: id++,
             timestamp: Date.now(),
             nombre: data.nombre,
             descripcion: data.descripcion,

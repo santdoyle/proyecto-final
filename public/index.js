@@ -11,10 +11,10 @@ const getProductos = async () => {
 
 getProductos().then(resp => {
     
-    if(resp.msg === "No hay productos añadidos"){
+    if(resp.msj === "No hay productos añadidos"){
         //Si no hay productos muestro mensaje
         const container = document.getElementById("contenedor")
-        container.innerHTML = `<h4>${resp.msg}<h4>`
+        container.innerHTML = `<h4>${resp.msj}<h4>`
     
     }else{
         const producto = document.getElementById("producto")
@@ -31,7 +31,7 @@ getProductos().then(resp => {
                                 <p class="card-text">${element.descripcion}</p>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="btn-group">
-                                    <button type="button" id="verProducto-${element.id}" class="btn btn-sm btn-outline-secondary">Ver</button>
+                                    <button type="button" id="verProducto-${element.idProducto}" class="btn btn-sm btn-outline-secondary">Ver</button>
                                     </div>
                                     <small class="text-muted">Agregar al carrito</small>
                                 </div>
@@ -43,12 +43,12 @@ getProductos().then(resp => {
             /*
                 * Ver producto por ID - Editar y Borrar
             */
-            const botonVer = document.getElementById(`verProducto-${element.id}`)
+            const botonVer = document.getElementById(`verProducto-${element.idProducto}`)
             const container = document.getElementById("contenedor")
             
             botonVer.addEventListener('click', () => {
 
-                fetch('/productos/listar?id=' + element.id, {
+                fetch('/productos/listar?id=' + element.idProducto, {
                     method: 'GET',
                     headers: {
                         'Accept': 'application/json',
@@ -123,7 +123,7 @@ getProductos().then(resp => {
                         cargando.style.display = "block"
 
                         const data = {
-                            id: resp[0].id,
+                            idProducto: resp[0].idProducto,
                             timestamp: resp[0].timestamp,
                             nombre: resp[0].nombre,
                             descripcion: resp[0].descripcion,
@@ -165,7 +165,7 @@ getProductos().then(resp => {
                                        
                                         <div class="form-group">
                                             <label>ID</label>
-                                            <input class="form-control" type="text" id="id" name="id" value="${resp[0].id}">
+                                            <input class="form-control" type="text" id="id" name="id" value="${resp[0].idProducto}">
                                         </div>
                                         <div class="form-group">
                                             <label>Nombre</label>
@@ -242,7 +242,7 @@ getProductos().then(resp => {
 
                     borrar.addEventListener('click', () => {
 
-                        fetch(`/productos/borrar/${element.id}`, {
+                        fetch(`/productos/borrar/${element.idProducto}`, {
                             method: 'DELETE',
                         })
                         .then(resp => resp.json())
@@ -250,7 +250,7 @@ getProductos().then(resp => {
                             container.innerHTML = resp.msj
                         })
 
-                        windows.location.assign('/tienda')
+                        window.location.assign('/tienda')
                     })
                 })
             })
