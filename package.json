@@ -19,6 +19,7 @@
   "homepage": "https://github.com/santdoyle/proyecto-final#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "faker": "^5.5.3",
     "knex": "^0.95.4",
     "mongoose": "^5.12.7",
     "mysql": "^2.18.1"

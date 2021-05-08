@@ -137,4 +137,23 @@ routerProductos.delete('/borrar/:id', (request, response, next) => {
 })
 
 
+routerProductos.get('/vista-test', (request, response) => {
+
+    if(request.query){
+        
+        const cantidad = request.query.cant
+        const random = productos.generarProductosFaker(cantidad)
+
+        response.json(random)
+
+    }else{
+        const cantidad = 10
+        const generarDiez = productos.generarProductosFaker(cantidad)
+
+        response.json(generarDiez)
+
+    }
+})
+
+
 module.exports = {routerProductos, listadoProductos}
