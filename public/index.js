@@ -25,6 +25,7 @@ fetch(url)
     
 
 function replace(data){
+    
     if(data.msj){
         const contenedor = document.getElementById('tablaContenedor')
 
