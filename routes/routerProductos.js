@@ -1,5 +1,5 @@
 const express = require('express');
-const Productos = require('../controllers/classProductos.js').Productos
+const Productos = require('../controllers/controllerProductos.js').Productos
 const routerProductos = express.Router()
 
 //Variables globales
@@ -11,21 +11,25 @@ let carritoCompras = []
 /*
     * Endpoint productos
 */
-const productos = new Productos(listadoProductos)
+const productos = new Productos()
 
 //Listar productos
 routerProductos.get('/listar', (request, response, next) => {
     try {
         if(request.query.id){
         
-            const item = productos.listarProductosPorID(request.query.id)
+            const item = productos.listarProductosPorID(request.query.id, listadoProductos)
+            
             response.status(200)
             response.json(item)
         
         }else{
             
-            const getAll = productos.listarTodos()
-            response.send(getAll)
+            const getAll = productos.listarTodos(listadoProductos)
+            getAll.then(resp => {
+                response.json(resp)
+            })
+            
         }
 
     } catch (error) {
@@ -43,8 +47,8 @@ routerProductos.post('/agregar', (request, response, next) => {
     
     try {
         if(administrador === true){
-            const addProducto = productos.agregarProducto(request.body, id++)
-            listadoProductos.push(addProducto)
+            const productos = new Productos()
+            productos.agregarProducto(request.body, id++, listadoProductos)
             
             //response.status(200)
             response.redirect('/public/')

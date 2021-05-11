@@ -1,5 +1,5 @@
 const express = require('express');
-const Carrito = require('../controllers/classCarrito.js').Carrito
+const Carrito = require('../controllers/controllerCarrito.js').Carrito
 const listado = require('./routerProductos').listadoProductos
 const routerCarrito = express.Router()
 
