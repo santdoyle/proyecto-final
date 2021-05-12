@@ -35,6 +35,10 @@ function replace(data){
         const tabla = document.getElementById('mytable')
         const cuerpoTabla = document.createElement('tbody')
 
+        if(tabla.getElementsByTagName('tbody')[0]){
+            tabla.getElementsByTagName('tbody')[0].remove()
+        }
+
         data.forEach(item => {
             let fila = document.createElement('tr')
 
