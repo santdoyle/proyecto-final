@@ -9,16 +9,18 @@ const getProductos = async () => {
 
 getProductos().then(resp => {
     
-    if(resp.msg === "No hay productos añadidos"){
+    if(resp.msj === "No hay productos añadidos"){
         //Si no hay productos muestro mensaje
         const container = document.getElementById("contenedor")
-        container.innerHTML = `<h4>${resp.msg}<h4>`
+        container.innerHTML = `<h4>No hay productos añadidos<h4>`
     
     }else{
         const producto = document.getElementById("producto")
 
         //Creo un elemento para cada nuevo producto
         resp.forEach(element => {
+            let id = element.id ?? element.idProducto
+            
             let div = document.createElement('div')
             
             div.innerHTML = `<div class="card shadow-sm">
@@ -29,7 +31,7 @@ getProductos().then(resp => {
                                 <p class="card-text">${element.descripcion}</p>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="btn-group">
-                                    <button type="button" id="verProducto-${element.id}" class="btn btn-sm btn-outline-secondary">Ver</button>
+                                    <button type="button" id="verProducto-${id}" class="btn btn-sm btn-outline-secondary">Ver</button>
                                     </div>
                                     <small class="text-muted">Agregar al carrito</small>
                                 </div>
@@ -41,14 +43,14 @@ getProductos().then(resp => {
             /*
                 * Ver producto por ID - Editar y Borrar
             */
-            const botonVer = document.getElementById(`verProducto-${element.id}`)
+            const botonVer = document.getElementById(`verProducto-${id}`)
             const container = document.getElementById("contenedor")
             
             botonVer.addEventListener('click', () => {
 
                 //Fetch para trear infrmación del prodcuto segun id
                 const getProductoByID = async () => {
-                    const data = await fetch('/productos/listar?id=' + element.id)
+                    const data = await fetch('/productos/listar?id=' + id)
                     const respuesta = await data.json()
 
                     return respuesta
@@ -61,7 +63,7 @@ getProductos().then(resp => {
                                         <aside class="col-sm-5 border-right">
                                             <article class="gallery-wrap"> 
                                                 <div class="img-big-wrap">
-                                                <div> <a href="#"><img src="${resp.imgUrl}"></a></div>
+                                                <div> <a href="#"><img src="${resp[0].imgUrl}"></a></div>
                                                 </div> <!-- slider-product.// -->
                                             </article> <!-- gallery-wrap .end// -->
                                         </aside>
@@ -70,20 +72,20 @@ getProductos().then(resp => {
                                         
                                             <p class="price-detail-wrap"> 
                                                 <span class="price h3 text-warning"> 
-                                                    <span class="currency">ARS $</span><span class="num">${resp.precio}</span>
+                                                    <span class="currency">ARS $</span><span class="num">${resp[0].precio}</span>
                                                 </span> 
                                             </p> <!-- price-detail-wrap .// -->
                                             <dl class="item-property">
                                                 <dt>Description</dt>
-                                                <dd><p>${resp.descripcion} </p></dd>
+                                                <dd><p>${resp[0].descripcion} </p></dd>
                                             </dl>
                                             <dl class="param param-feature">
                                                 <dt>Codigo</dt>
-                                                <dd>${resp.codigo}</dd>
+                                                <dd>${resp[0].codigo}</dd>
                                             </dl>  <!-- item-property-hor .// -->
                                             <dl class="param param-feature">
                                                 <dt>Stock</dt>
-                                                <dd>${resp.stock}</dd>
+                                                <dd>${resp[0].stock}</dd>
                                             </dl>  <!-- item-property-hor .// -->                            
                                             <hr>
                                             <button class="btn btn-lg btn-outline-primary" id="comprar"> 
@@ -100,7 +102,7 @@ getProductos().then(resp => {
                                 
                     //Reemplazo el grid de productos por la ficha del producto seleccionado            
                     const titulo = document.getElementById('titulo')
-                    titulo.innerHTML = `${resp.nombre}`
+                    titulo.innerHTML = `${resp[0].nombre}`
              
                     const desc = document.getElementById('desc')
                     desc.remove()
@@ -116,7 +118,7 @@ getProductos().then(resp => {
                     cargando.style.display = "none"
                    
                     comprar.addEventListener('click', () => {
-                        console.log(resp.id)
+
                         comprar.style.display = "none"
                         cargando.style.display = "block"
 
@@ -152,35 +154,37 @@ getProductos().then(resp => {
                     const editar = document.getElementById('editar')
                     
                     editar.addEventListener('click', () => {
+                        id = resp[0].id ?? resp[0].idProducto
+
                         const form = `<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">  
                                        
                                         <div class="form-group">
                                             <label>ID</label>
-                                            <input class="form-control" type="text" id="id" name="id" value="${resp.id}">
+                                            <input class="form-control" type="text" id="id" name="id" value="${id}">
                                         </div>
                                         <div class="form-group">
                                             <label>Nombre</label>
-                                            <input class="form-control" type="text" id="nombre" name="nombre" placeholder="${resp.nombre}">
+                                            <input class="form-control" type="text" id="nombre" name="nombre" value="${resp[0].nombre}">
                                         </div>
                                         <div class="form-group">
                                             <label>Descripción del producto</label>
-                                            <textarea class="form-control" id="descripcion" name="descripcion" placeholder="${resp.descripcion}"></textarea>
+                                            <input type="text" class="form-control" id="descripcion" name="descripcion" value="${resp[0].descripcion}">
                                         </div>
                                         <div class="form-group">
                                             <label>Codigo</label>
-                                            <input class="form-control" type="text" id="codigo" name="codigo" placeholder="${resp.codigo}">
+                                            <input class="form-control" type="text" id="codigo" name="codigo" value="${resp[0].codigo}">
                                         </div>
                                         <div class="form-group">
                                             <label>Url de imagen</label>
-                                            <input class="form-control" type="text" id="imgUrl" name="imgUrl" placeholder="${resp.imgUrl}">
+                                            <input class="form-control" type="text" id="imgUrl" name="imgUrl" value="${resp[0].imgUrl}">
                                         </div>
                                         <div class="form-group">
                                             <label>Precio</label>
-                                            <input class="form-control" type="text" id="precio" name="precio" placeholder="${resp.precio}">
+                                            <input class="form-control" type="text" id="precio" name="precio" value="${resp[0].precio}">
                                         </div>
                                         <div class="form-group">
                                             <label>Stock</label>
-                                            <input class="form-control" type="text" id="stock" name="stock" placeholder="${resp.stock}">
+                                            <input class="form-control" type="text" id="stock" name="stock" value="${resp[0].stock}">
                                         </div>
                                         <button type="submit" id="actualizar" class="btn btn-primary" data-dismiss="modal">Agregar</button>
                                     </div>
@@ -233,15 +237,15 @@ getProductos().then(resp => {
 
                     borrar.addEventListener('click', () => {
 
-                        fetch(`/productos/borrar/${element.id}`, {
+                        fetch(`/productos/borrar/${id}`, {
                             method: 'DELETE',
                         })
                         .then(resp => resp.json())
                         .then(resp => {
-                            container.innerHTML = resp.msg
+                            container.innerHTML = resp + '<a href="/tienda/">  Volver a la tienda</a>'
                         })
 
-                        windows.location.assign('/tienda')
+                        //window.location.assign('/tienda')
                     })
                 })
             })
