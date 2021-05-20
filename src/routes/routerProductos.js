@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path')
 const Productos = require('../controllers/controllerProductos.js').Productos
 const routerProductos = express.Router()
 
@@ -10,52 +11,56 @@ let carritoCompras = []
 /*
     * Endpoint productos
 */
+
 const productos = new Productos()
-
-//Listar productos
+//Listar todos los productos
 routerProductos.get('/listar', (request, response, next) => {
-    try {
-        if(request.query.id){
+   
+    try{            
         
-            const item = productos.listarProductosPorID(request.query.id, listadoProductos)
-
-            item.then(resp => {
-                response.status(200).json(resp)
-            })
-            
+        const getAll = productos.listarTodos(listadoProductos)
+        getAll.then(resp => {
+            response.render('index', {data: resp})
+            //response.json(resp)
+        })
         
-        }else{
-            
-            const getAll = productos.listarTodos(listadoProductos)
-            getAll.then(resp => {
-                
-                response.json(resp)
-            })
-            
-        }
-
     } catch (error) {
         console.log(error)
         error = {msj: `Ha ocurrido un error ${error}`}
-
+        
         response.json(error)
+
     }
 })
 
+//Listar producto por ID
+routerProductos.get('/listar/:id', (request, response) => {
+    if(request.params.id){
+        const item = productos.listarProductosPorID(request.params.id, listadoProductos)
 
-//Añadir producto
+        item.then(resp => {
+            console.log(resp)
+            response.render('ficha', {data: resp})
+            /*response.status(200).json(resp)*/
+        })
+    
+    }
+})
+
+/*Vista publicar producto*/
+routerProductos.get('/publicar', (request, response) => {
+    response.render('publicarProducto')
+})
+
+
+//Endpoint publicar producto
 let id = 0
 routerProductos.post('/agregar', (request, response, next) => {
     
     try {
         if(administrador === true){
-            const productos = new Productos()
             productos.agregarProducto(request.body, id++, listadoProductos)
-            
-            //response.status(200)
             response.redirect('/public/')
-            //response.json(`Producto agregado. Cantidad: ${listadoProductos.length}`)
-            
         }else{
             const error = {
                     error: "-1",
@@ -75,17 +80,27 @@ routerProductos.post('/agregar', (request, response, next) => {
     
 })
 
+routerProductos.get('/editar/:id', (request, response) => {
+    
+    const item = productos.listarProductosPorID(request.params.id, listadoProductos)
+
+        item.then(resp => {
+            response.render('editar', {data: resp})
+        })
+
+})
+
 //Actualizar producto por ID
 routerProductos.put('/actualizar/:id', (request, response, next) => {
+    
     try {
         if(administrador === true){
-            const productos = new Productos()
             const respuesta = productos.actualizarProducto(request.params.id, request.body)
-            listadoProductos = respuesta
-
-            response.status(200)
-            response.json('Producto actualizado correctamente')
-        
+            
+            respuesta.then(resp => {
+                response.redirect('/listar')
+            })
+                    
         }else{
             const error = {
                 error: "-1",
@@ -105,12 +120,12 @@ routerProductos.put('/actualizar/:id', (request, response, next) => {
     
 })
 
+
 //Eliminar producto por ID
 routerProductos.delete('/borrar/:id', (request, response, next) => {
     
     try {
         if(administrador === true){
-            const productos = new Productos()
             let eliminado = productos.borrarProducto(request.params.id, listadoProductos)
             
             eliminado.then(resp => {
@@ -134,6 +149,22 @@ routerProductos.delete('/borrar/:id', (request, response, next) => {
         response.json(error)
     }
     
+})
+
+
+routerProductos.get('/buscar/:key', (request, response) => {
+    const key = request.params.key
+
+    try {
+        const item = productos.buscarPor(key)
+
+        item.then(resp => {
+            response.json(resp)
+        })
+
+    } catch (error) {
+        console.log(error)
+    }
 })
 
 

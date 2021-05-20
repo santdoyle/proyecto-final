@@ -25,7 +25,7 @@ cargar.addEventListener('click', () => {
             precio: precio,
             stock: stock
         }
-    
+        
         fetch('/productos/agregar', {
             method: 'POST',
             headers: {
@@ -39,6 +39,6 @@ cargar.addEventListener('click', () => {
         .then(resp => resp)
         .then(resp => console.log(resp))
     
-        window.location.assign('/tienda')
+        window.location.assign('/productos/listar')
     }
 })

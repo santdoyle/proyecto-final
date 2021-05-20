@@ -50,8 +50,9 @@ class modelProductosMongodb{
 
 
     getOne(id){
+
         this.connectionDB(this.connection)
-        const getById = models.Productos.find({"idProducto": id})
+        const getById = models.Productos.find({"_id": id})
         
         return getById
     }

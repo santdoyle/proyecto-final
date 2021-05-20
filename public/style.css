@@ -108,3 +108,12 @@
     display: block;
     padding: 20px 0px;
 }
+
+.card img{
+    max-height: 300px;
+}
+
+.busqueda{
+    display: inline-block !important;
+    width: 80% !important;
+}

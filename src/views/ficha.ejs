@@ -1,0 +1,76 @@
+<%- include('templates/header') %>
+    <%- include('templates/nav') %>
+
+    <main>
+
+        <section class="py-5 text-center container">
+          <div class="row py-lg-5" id="encabezado">
+            
+            <div class="col-lg-6 col-md-8 mx-auto">
+              <h1 class="fw-light" id="titulo">Tienda online</h1>
+              <div id="desc">
+                <p class="lead text-muted" >Tienda online de productos escolares.</p>
+                <p>
+                  <a href="/productos/publicar" class="btn btn-primary my-2">Publicar Producto</a>
+                  <a href="#" class="btn btn-secondary my-2"><i class="fas fa-shopping-cart"></i> Ver carrito</a>
+                </p>
+              </div>
+              
+            </div>
+            
+          
+          </div>
+        </section>
+    
+        <div class="album py-5 bg-light">
+          <div class="container" id="contenedor">
+              
+                <div class="card">
+                    <div class="row">
+                        <aside class="col-sm-5 border-right">
+                            <article class="gallery-wrap"> 
+                                <div class="img-big-wrap">
+                                <div> <a href="#"><img src="<%= data[0].imgUrl %>"></a></div>
+                                </div> <!-- slider-product.// -->
+                            </article> <!-- gallery-wrap .end// -->
+                        </aside>
+                        <aside class="col-sm-7">
+                            <article class="card-body p-5">
+                        
+                                <p class="price-detail-wrap"> 
+                                    <span class="price h3 text-warning"> 
+                                        <span class="currency">ARS $</span><span class="num"><%= data[0].precio %></span>
+                                    </span> 
+                                </p> <!-- price-detail-wrap .// -->
+                                <dl class="item-property">
+                                    <dt>Description</dt>
+                                    <dd><p><%= data[0].descripcion %> </p></dd>
+                                </dl>
+                                <dl class="param param-feature">
+                                    <dt>Codigo</dt>
+                                    <dd><%= data[0].codigo %></dd>
+                                </dl>  <!-- item-property-hor .// -->
+                                <dl class="param param-feature">
+                                    <dt>Stock</dt>
+                                    <dd><%= data[0].stock %></dd>
+                                </dl>  <!-- item-property-hor .// -->                            
+                                <hr>
+                                <button class="btn btn-lg btn-outline-primary" id="comprar"> 
+                                    <i class="fas fa-shopping-cart"></i> Agrear al carrito 
+                                </button>
+                                <hr>
+                                <div class="d-inline">
+                                  <a href="/productos/editar/<%= data[0].id %>" id="editar" class="btn btn-sm btn-outline-secondary">Editar</a>
+                                  <button id="borrar" class="btn btn-sm btn-outline-secondary">Borrar: <span id="productoID"><%= data[0].id %></span></button>
+                                </div>
+                              </article> <!-- card-body.// -->
+                        </aside> <!-- col.// -->
+                    </div> <!-- row.// -->
+                </div> <!-- card.// -->
+
+          </div>
+        </div>
+    
+      </main>
+
+<%- include('templates/footer')%>    

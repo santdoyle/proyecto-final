@@ -1,6 +1,6 @@
 const controllerPersistencia = require('./controllerPersistencia.js')
 
-const persistencia = 6
+const persistencia = 2
 const almacenamiento = new controllerPersistencia()
 
 class Productos{
@@ -17,7 +17,7 @@ class Productos{
         
         const db = almacenamiento.setPersist(persistencia, productos)
         const listaDeProductos = db.getOne(id)
-        
+
         return Promise.resolve(listaDeProductos)
     }
 
@@ -57,6 +57,13 @@ class Productos{
     borrarProducto(id, productos){
         const enMemoria = almacenamiento.setPersist(persistencia, productos)
         const listaDeProductos = enMemoria.deleteOne(id)
+            
+        return Promise.resolve(listaDeProductos)
+    }
+
+    buscarPor(key){
+        const db = almacenamiento.setPersist(persistencia)
+        const listaDeProductos = db.searchBy(key)
             
         return Promise.resolve(listaDeProductos)
     }

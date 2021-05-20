@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const url = 'mongodb+srv://santdoyle:santdoyle@cluster0.1j600.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+const url = ''
 let rpta =  mongoose.connect(url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,

@@ -55,7 +55,7 @@ class modelProductosMariaDB{
     deleteOne(id){
         return knex.from('productos').where('id', id).del()
             .then(resp => {
-                if(resp == 1){
+                if(resp === 1){
                     return {msj: 'El producto fue eliminado correctamente'}
                 }else{
                     return {msj: 'El producto no se encuentra'}
@@ -77,7 +77,7 @@ class modelProductosMariaDB{
             stock: data.stock
         })
         .then(resp => {
-            if(resp == 1){
+            if(resp === 1){
                 return {msj: 'Producto actualizado correctamente'}
             }else{
                 return {msj: 'Error al actualizar el producto'}
@@ -85,6 +85,19 @@ class modelProductosMariaDB{
         })
         .catch(e => e)
 
+    }
+
+    searchBy(key){
+        return knex.from('productos').select().where('nombre', key).orWhere('codigo', key)
+        .then(resp => {
+            if(resp.length > 0){
+                
+                return resp
+            
+            }else{
+                return {msj: 'El producto no existe'}
+            }
+        })
     }
 
 }
