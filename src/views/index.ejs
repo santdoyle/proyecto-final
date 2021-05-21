@@ -30,7 +30,7 @@
     <div class="album py-5 bg-light">
       <div class="container" id="contenedor">
         <div style="width: 10%; margin-bottom: 20px;">
-          <select class="form-select">
+          <select class="form-select" id="filtro">
             <option selected>Ordenar por:</option>
             <option value="precio">Precio</option>
             <option value="stock">Stock</option>
@@ -42,7 +42,7 @@
           <% }else { %> 
             <% for(let element of data){ %>
               
-                <div class="card shadow-sm">
+                <div class="card shadow-sm" id="tarjeta">
                   <img src="<%= element.imgUrl %>">
                   <div class="card-body">
                     <h2><%= element.nombre %></h2>

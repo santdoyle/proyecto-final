@@ -1,6 +1,6 @@
 const controllerPersistencia = require('./controllerPersistencia.js')
 
-const persistencia = 2
+const persistencia = 3
 const almacenamiento = new controllerPersistencia()
 
 class Productos{
@@ -65,6 +65,13 @@ class Productos{
         const db = almacenamiento.setPersist(persistencia)
         const listaDeProductos = db.searchBy(key)
             
+        return Promise.resolve(listaDeProductos)
+    }
+
+    ordenarPor(key){
+        const db = almacenamiento.setPersist(persistencia)
+        const listaDeProductos = db.orderBy(key)
+
         return Promise.resolve(listaDeProductos)
     }
 

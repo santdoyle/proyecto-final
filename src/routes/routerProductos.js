@@ -168,4 +168,20 @@ routerProductos.get('/buscar/:key', (request, response) => {
 })
 
 
+routerProductos.get('/ordenar/:key', (request, response) => {
+    const key = request.params.key
+
+    try {
+        const item = productos.ordenarPor(key)
+
+        item.then(resp => {
+            response.json(resp)
+        })
+
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+
 module.exports = {routerProductos, listadoProductos}

@@ -96,6 +96,38 @@ class modelProductosMongodb{
         
         return borrar   
     }
+
+    searchBy(key){
+        this.connectionDB(this.connection)
+
+        const buscar = models.Productos.find({"nombre": key})
+        .then(resp => {
+            if(resp.length > 0){
+                return resp
+            }else{
+                return {msj: "No hay productos con ese nombre"}
+            }
+        })
+        .catch(e => console.log(e))
+
+        return buscar
+    }
+
+    orderBy(key){
+        this.connectionDB(this.connection)
+
+        const ordenar = models.Productos.find({}).sort({key: -1})
+         .then(resp => {
+            if(resp.length > 0){
+                return resp
+            }else{
+                return {msj: "No hay productos con ese nombre"}
+            }
+         })
+         .catch(e => console.log(e))
+
+         return ordenar
+    }
 }
     
 module.exports = modelProductosMongodb

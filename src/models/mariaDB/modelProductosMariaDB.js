@@ -100,6 +100,13 @@ class modelProductosMariaDB{
         })
     }
 
+    orderBy(key){
+        console.log(key)
+        return knex.from('productos').select().orderBy(`${key}`, 'desc')
+        .then(resp => resp)
+        .catch(e => console.log(e))
+    }
+
 }
 
 module.exports = modelProductosMariaDB

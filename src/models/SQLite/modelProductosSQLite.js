@@ -113,6 +113,26 @@ class modelProductoSqlite{
         .catch(e => e)
 
     }
+
+    searchBy(key){
+        return knex.from('productos').select().where('nombre', key).orWhere('codigo', key)
+        .then(resp => {
+            if(resp.length > 0){
+                
+                return resp
+            
+            }else{
+                return {msj: 'El producto no existe'}
+            }
+        })
+    }
+
+    orderBy(key){
+        console.log(key)
+        return knex.from('productos').select().orderBy(`${key}`, 'desc')
+        .then(resp => resp)
+        .catch(e => console.log(e))
+    }
 }
 
 module.exports = modelProductoSqlite
