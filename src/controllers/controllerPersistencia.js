@@ -1,28 +1,20 @@
-const config = require('../models/config.js')
+const modelMemoria = require("../models/enMemoria/modelProductosMemoria");
+const modelProductosMariaDB = require('../models/mariaDB/modelProductosMariaDB.js')
+const modelProductoSqlite = require('../models/SQLite/modelProductosSQLite.js')
+const modelProductosMongodb = require('../models/mongoDB/modelProductosMongodb.js')
+
+let option = process.argv[2] || 4
 
 class controllerPersistencia{
-    setPersist(persistencia, productos){
-        const setDB = new config()
-    
-        if(persistencia === 0){
-            const db = setDB.enmemoria(productos)
-            return db
-            
-        }else if(persistencia === 2){
-            const db = setDB.mariadb()
-            return db
-        
-        }else if(persistencia === 3 || persistencia === 6){
-            
-            const db = setDB.mongodb(persistencia)
-            return db
-
-        }else if(persistencia === 4){
-            const db = setDB.sqlite()
-            return db
-        
+    static setPersist(option){
+        switch(option){
+            case 0: return new modelMemoria();
+            case 2: return new modelProductosMariaDB()
+            case 3: return new modelProductosMongodb(option)
+            case 4: return new modelProductoSqlite()
+            case 6: return new modelProductosMongodb(option)
         }
     }
 }
 
-module.exports = controllerPersistencia
+module.exports = controllerPersistencia.setPersist(option)

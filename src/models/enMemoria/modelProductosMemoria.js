@@ -1,12 +1,8 @@
 
 class modelProductosMemoria{
-    arr = ""
-    constructor(arr){
-        this.arr = arr
-    }
 
-    getAll(){
-        if(this.arr.length === 0){
+    getAll(lista){
+        if(lista.length === 0){
             const msj = {"msj": "No hay productos añadidos"}
             return msj
         }else{
@@ -14,11 +10,10 @@ class modelProductosMemoria{
         }
     }
 
-    getOne(id){
-        const listado = this.arr
+    getOne(id, listado){
         const idInt = parseInt(id)
 
-        if(id > this.arr.length){
+        if(id > listado.length){
             throw new Error('Producto no encontrado')
         }
 

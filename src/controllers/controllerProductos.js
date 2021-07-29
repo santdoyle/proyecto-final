@@ -1,22 +1,17 @@
-const controllerPersistencia = require('./controllerPersistencia.js')
-
-const persistencia = 3
-const almacenamiento = new controllerPersistencia()
+const persistencia = require('./controllerPersistencia.js')
 
 class Productos{
 
     listarTodos(productos){
         
-        const db = almacenamiento.setPersist(persistencia, productos)
-        const listaDeProductos = db.getAll()
+        const listaDeProductos = persistencia.getAll(productos)
 
         return Promise.resolve(listaDeProductos)
     }
     
     listarProductosPorID(id, productos){
         
-        const db = almacenamiento.setPersist(persistencia, productos)
-        const listaDeProductos = db.getOne(id)
+        const listaDeProductos = persistencia.getOne(id, productos)
 
         return Promise.resolve(listaDeProductos)
     }
@@ -35,8 +30,7 @@ class Productos{
             stock: data.stock
         }
         
-        const db = almacenamiento.setPersist(persistencia, productos)
-        const listaDeProductos = db.addOne(producto)
+        const listaDeProductos = persistencia.addOne(producto)
 
         return Promise.resolve(listaDeProductos)
 
@@ -46,8 +40,7 @@ class Productos{
     actualizarProducto(id, data){
         let productos = []
             
-        const db = almacenamiento.setPersist(persistencia, productos)
-        const listaDeProductos = db.updateOne(id, data)
+        const listaDeProductos = persistencia.updateOne(id, data)
         
         return Promise.resolve(listaDeProductos)
         
@@ -55,22 +48,19 @@ class Productos{
     }
 
     borrarProducto(id, productos){
-        const enMemoria = almacenamiento.setPersist(persistencia, productos)
-        const listaDeProductos = enMemoria.deleteOne(id)
+        const listaDeProductos = persistencia.deleteOne(id)
             
         return Promise.resolve(listaDeProductos)
     }
 
     buscarPor(key){
-        const db = almacenamiento.setPersist(persistencia)
-        const listaDeProductos = db.searchBy(key)
+        const listaDeProductos = persistencia.searchBy(key)
             
         return Promise.resolve(listaDeProductos)
     }
 
     ordenarPor(key){
-        const db = almacenamiento.setPersist(persistencia)
-        const listaDeProductos = db.orderBy(key)
+        const listaDeProductos = persistencia.orderBy(key)
 
         return Promise.resolve(listaDeProductos)
     }

@@ -1,9 +1,16 @@
 const models = require('./schemas/schemaProductos.js')
 
 class modelProductosMongodb{
+    static instancia
     
-    constructor(connection){
+    constructor(connection) {
+        if(!!modelProductosMongodb.instancia){
+            return modelProductosMongodb.instancia
+        }
+
+        modelProductosMongodb.instancia = this
         this.connection = connection
+
     }
 
     connectionDB(c){

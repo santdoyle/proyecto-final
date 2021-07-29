@@ -2,6 +2,15 @@ const {options} = require('../mariaDB/connection.js')
 const knex = require('knex')(options)
 
 class modelProductosMariaDB{
+    static instancia
+    
+    constructor() {
+        if(!!modelProductosMariaDB.instancia){
+            return modelProductosMariaDB.instancia
+        }
+
+        modelProductosMariaDB.instancia = this
+    }
 
     //Guardar producto en DB
     addOne(producto){
@@ -35,7 +44,7 @@ class modelProductosMariaDB{
                 for (const item of resp) {
                     data.push(item)
                 }
-                
+                console.log(data)
                 return data
             })
             .catch(e => console.log(e))

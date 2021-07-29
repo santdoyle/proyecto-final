@@ -2,6 +2,14 @@ const {options} = require('../SQLite/connectionSqlite.js')
 const knex = require('knex')(options)
 
 class modelProductoSqlite{
+    
+    constructor() {
+        if(!!modelProductoSqlite.instancia){
+            return modelProductoSqlite.instancia
+        }
+
+        modelProductoSqlite.instancia = this
+    }
 
     //Guardar producto en DB
     addOne(producto){
